@@ -1,13 +1,16 @@
 import java.io.*;
 
 public class Ejer1Java {
-	public static void main(String[] args) throws IOException,
-			ClassNotFoundException {
+	public static void main(String[] args) throws IOException,ClassNotFoundException {
+		
 		Departamento departamento;
-
+		String nombre, localidad;
+		
+		int numeroDep;
+		
 		File fic = new File("c:\\datos\\Departamentos.dat");
 
-		FileOutputStream ficsal = new FileOutputStream(fic);// Crear el flujo de
+		FileOutputStream ficsal = new FileOutputStream(fic,true);// Crear el flujo de
 															// salida y entrada
 		FileInputStream ficent = new FileInputStream(fic);
 
@@ -19,31 +22,48 @@ public class Ejer1Java {
 																	// al de
 																	// entrada
 		ObjectInputStream datent = new ObjectInputStream(ficent);
-
-		String nombres[] = { "Finanzas", "Recursos Humanos", "Logistica",
+		
+	
+		InputStreamReader entrada=new InputStreamReader(System.in);//entrada por teclado
+		
+		BufferedReader teclado=new BufferedReader(entrada);
+		
+		/*String nombres[] = { "Finanzas", "Recursos Humanos", "Logistica",
 				"Marketing" };
 		int numeros[] = { 15, 20, 15, 13};
 		String localidades[] = { "Zaragoza Centro", "Zaragoza norte",
-				"Zaragoza Sur", "Zaragoza Oeste" };
+				"Zaragoza Sur", "Zaragoza Oeste" };*/
+		
+		System.out.print("Introduzca numero departamento: ");
+		
+		numeroDep=Integer.parseInt(teclado.readLine());//hay que hacer una conversion
+				//cuando en un programa introducimos un datos 
+				//y pulsamos el intro como final de entrada, el carácter intro 
+				//también pasa al buffer de entrada
+		//teclado.readLine();//capturamos el \n 
+		System.out.print("Introduzca nombre departamento: ");
+		
+		nombre=teclado.readLine();
+	
+		System.out.print("Introduzca localidad departamento: ");
+		
+		localidad=teclado.readLine();
+		
+		departamento = new Departamento(numeroDep, nombre,localidad);// creo el objeto persona
 
-		for (int i = 0; i < numeros.length; i++) { // recorro los arrays
-
-			departamento = new Departamento(numeros[i], nombres[i],
-					localidades[i]);// creo el objeto persona
-
-			datsal.writeObject(departamento);// escribo la persona en el fichero
-		}
+		datsal.writeObject(departamento);// escribo la persona en el fichero
+		
 		datsal.close();
 		// Leer el contenido de los objetos en el fichero binario
 		try {
-			while (true) {
-
-				departamento = (Departamento) datent.readObject();// leer una
-																	// pesona
-				System.out.println("Nombre: " + departamento.getNombre()
-						+ ", numero dep: "
-						+ departamento.getNumeroDepartamento()
-						+ ", localidad: " + departamento.getLocalidad());
+			int i;
+			departamento = (Departamento) datent.readObject();
+			System.out.println("Entro aqui");
+			while ((i = ficent.read()) != -1) {// leer una pesona
+				System.out.println("i: "+i);
+				System.out.println("Entro while");
+				System.out.println("Nombre: " + departamento.getNombre()+ ", numero dep: "+ departamento.getNumeroDepartamento()+ ", localidad: " + departamento.getLocalidad());
+				departamento = (Departamento) datent.readObject();
 			}
 		} catch (EOFException eo) {
 		}
