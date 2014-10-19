@@ -57,13 +57,15 @@ public class Ejer1Java {
 		// Leer el contenido de los objetos en el fichero binario
 		try {
 			int i;
-			departamento = (Departamento) datent.readObject();
-			System.out.println("Entro aqui");
-			while ((i = ficent.read()) != -1) {// leer una pesona
-				System.out.println("i: "+i);
-				System.out.println("Entro while");
-				System.out.println("Nombre: " + departamento.getNombre()+ ", numero dep: "+ departamento.getNumeroDepartamento()+ ", localidad: " + departamento.getLocalidad());
+			//departamento = (Departamento) datent.readObject();
+			//System.out.println("Entro aqui");
+			//departamento = (Departamento) datent.readObject();
+			while (true) {// leer una pesona
+				//System.out.println("i: "+i);
+				//System.out.println("Entro while");
 				departamento = (Departamento) datent.readObject();
+				System.out.println("Nombre: " + departamento.getNombre()+ ", numero dep: "+ departamento.getNumeroDepartamento()+ ", localidad: " + departamento.getLocalidad());
+				
 			}
 		} catch (EOFException eo) {
 		}
