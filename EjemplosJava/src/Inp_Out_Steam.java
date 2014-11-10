@@ -3,27 +3,25 @@ import java.io.*;
 
 public class Inp_Out_Steam {
 	public static void main(String[] args) throws IOException {
-		
-		File fic = new File("c:\\datos\\ficbinario.dat");//objeto fic asociado a ficbinario.dat
-		
-		FileOutputStream ficsal = new FileOutputStream(fic);// Crear el flujo de escritura fiscsal asociado a ficbinario.dat
+		File fic = new File("c:\\datos\\ficbinario.dat");
+
+		FileOutputStream ficsal = new FileOutputStream(fic);// Crear el flujo de escritura en el fichero binario
 		
 		/*Para añadir bytes al final del fichero utilizar 
 		 * FileOutputStream  ficsal = new FileOutputStream(fic, true); */
 	
-		
-		FileInputStream ficent = new FileInputStream(fic);// Crear el flujo de lectura ficent asociado a ficbinario.dat
+	
+		FileInputStream ficent = new FileInputStream(fic);// Crear el flujo de lectura  del fichero
 		int i;
 
-		for (i = 1; i <= 100; i++) {
-			ficsal.write(i);
-		}
-		ficsal.close(); // cerrar flujo de salida ficsal
+		for (i = 1; i <= 100; i++) 
+		ficsal.write(i);
+		ficsal.close(); // cerrar flujo de salida
 
-		
-		while ((i = ficent.read()) != -1)// visualizar el contenido del fichero hasta final de dicho fichero
-		
-			System.out.println(i);	// lee datos del flujo hasta llegar al final
-		ficent.close();// cerrar flujo de entrada ficent
-		}
+		// visualizar el contenido del fichero
+		while ((i = ficent.read()) != -1)
+			// lee datos del flujo hasta llegar al final
+			System.out.println(i);
+		ficent.close();
+	}
 }

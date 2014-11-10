@@ -9,7 +9,7 @@ public class buffered_reader {
 				System.out.println(linea);
 			fichero.close();
 		}catch (FileNotFoundException fn) {
-			System.out.println(fn);
+			System.out.println("No se encuentra el fichero");
 			}
 		catch (IOException io){
 			System.out.println("Error de E/S");

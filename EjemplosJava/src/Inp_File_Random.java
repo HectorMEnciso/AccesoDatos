@@ -4,8 +4,10 @@ import java.io.*;
 public class Inp_File_Random {
 	public static void main(String[] args) throws IOException {
 		File fic = new File("c:\\datos\\Empleados.dat");
-		
-		RandomAccessFile ficale = new RandomAccessFile(fic, "r");// Se declara el fichero como de acceso aleatorio, para lectura y escritura ("rw") o para sólo lectura ("r")
+		// Se declara el fichero como de acceso aleatorio, para lectura y
+		// escritura ("rw")
+		// o para sólo lectura ("r")
+		RandomAccessFile ficale = new RandomAccessFile(fic, "r");
 
 		// Recorrer el fichero para visualizar los registros guardados
 		int idemp, depemp, posicion = 0;
@@ -15,10 +17,10 @@ public class Inp_File_Random {
 
 		for (;;) { // recorro el fichero aleatorio
 			ficale.seek(posicion); // nos posicionamos en el inicio del fichero
-			idemp = ficale.writeInt(); // obtenemos el id del empleado
+			idemp = ficale.readInt(); // obtenemos el id del empleado
 			apempl = LeerApellido(ficale, apemp);
-			depemp = ficale.writeInt(); // obtenemos el departamento
-			salemp = ficale.writeDouble(); // obtenemos el salario
+			depemp = ficale.readInt(); // obtenemos el departamento
+			salemp = ficale.readDouble(); // obtenemos el salario
 		
 			System.out.println("ID: " + idemp + ", Apellido: " + apempl
 					+ ", Departamento: " + depemp + ", Salario: " + salemp);
@@ -37,7 +39,7 @@ public class Inp_File_Random {
 			else
 			{
 				ficale.seek(posicion);
-				idaux=ficale.writeInt();
+				idaux=ficale.readInt();
 				apempl = LeerApellido(ficale, apemp);
 				System.out.println("id: "+idaux+" Apellidos: "+apempl);
 			}
@@ -48,9 +50,10 @@ public class Inp_File_Random {
 			throws IOException {
 		char aux;
 		for (int i = 0; i < apemp.length; i++) {
-			aux = ficale.writeChar(); // recorrer uno a uno los caracteres del apellido
+			aux = ficale.readChar(); // recorrer uno a uno los caracteres del apellido
 			apemp[i] = aux; // guardo el caracter leído en el array
 		}
 		String apeString = new String(apemp); // convierto en String el array
 		return apeString;
 	}
+}
