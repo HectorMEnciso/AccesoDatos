@@ -11,6 +11,7 @@ public class ejer5 {
 	public static void main(String[] args) {
 		int opcion, stockActual, stockMinimo, pvp, opcionTablas,idCliente,idProducto,cantidad;
 		String id, descripcion, nombre, direccion, poblacion, telef, nif,fecha;
+		float precioTotal=0; 
 		Scanner teclado = new Scanner(System.in);
 		do {
 			System.out.println("Seleccione BBDD: ");
@@ -195,12 +196,13 @@ public class ejer5 {
 								System.out.print("El campo no puede ser nulo, Introduzca id VENTA: ");
 								id = teclado.nextLine();
 							}
-							ResultSet resulVentas = sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
+							ResultSet resulVentas =null; 
+							resulVentas=	sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
 							while (resulVentas.next()) {
 
 								System.out.print("El id VENTA ya existe ya existe: ");
 								id = teclado.nextLine();
-								ResultSet resulVentas2 = sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
+								resulVentas= sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
 							}
 							System.out.println("Introduzca fecha: ");
 							fecha=teclado.nextLine();
@@ -211,25 +213,27 @@ public class ejer5 {
 							}
 							System.out.println("Introduzca ID de Cliente");
 							idCliente=teclado.nextInt();
-							ResultSet resulIdCliente= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+							ResultSet resulIdCliente=null; 
+							resulIdCliente=sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 							
 							while (!resulIdCliente.next()) {
 
 								System.out.print("El IdCliente no existe,introduzcalo de nuevo: ");
 								idCliente = teclado.nextInt();
-								ResultSet resulIdCliente2= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+								resulIdCliente= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 							}
 							
 							
 							System.out.println("Introduzca ID de Producto");
 							idProducto=teclado.nextInt();
-							ResultSet resulIdProducto= sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
+							ResultSet resulIdProducto=null; 
+							resulIdProducto=sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
 							
 							while (!resulIdProducto.next()) {
 
 								System.out.print("El IdProducto no existe,introduzcalo de nuevo: ");
 								idProducto = teclado.nextInt();
-								ResultSet resulIdProducto2= sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
+								resulIdProducto= sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
 							}
 							System.out.println("Introduzca cantidad: ");
 							cantidad=teclado.nextInt();
@@ -237,9 +241,7 @@ public class ejer5 {
 								System.out.println("La cantidad debe ser mayor que 0: ");
 								cantidad=teclado.nextInt();
 							}
-							
 							ResultSet resulStock= sentencia.executeQuery("SELECT stockactual FROM productos where productos.id='"+ String.valueOf(idProducto) + "' and stockactual>0");
-							
 							
 							while (resulStock.next()){
 								Statement sentenciaVentas = conexion.createStatement();
@@ -265,20 +267,10 @@ public class ejer5 {
 											+ resulTablaVentas.getInt(4) + " "
 											+ resulTablaVentas.getInt(5));
 								}
-								
-								
-								
 							}
-							if (!resulStock.next()){
-								System.out.println("Se ha cancelado el proceso, no hay stock actual disponible");
-							}
-							
-							
-							
-							
 						} catch (ClassNotFoundException cn) {
 							cn.printStackTrace();
-						} catch (InstantiationException ie) {
+						} catch (InstantiationException ie) { 
 							ie.printStackTrace();
 						} catch (IllegalAccessException ia) {
 							ia.printStackTrace();
@@ -295,27 +287,26 @@ public class ejer5 {
 						System.out.println("LISTADO CLIENTES TABLA VENTAS");
 						System.out.println("==============================");
 						
-						System.out.println("Introduzca ID de cliente para listar sus ventas: ");
+						System.out.print("Introduzca ID de cliente para listar sus ventas: ");
 						idCliente=teclado.nextInt();
-						ResultSet resulIdCliente= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+						ResultSet resulIdCliente= null;
+						
+						resulIdCliente=	sentencia.executeQuery("SELECT id, nombre FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 						
 						while (!resulIdCliente.next()) {
-
 							System.out.print("El IdCliente no existe,introduzcalo de nuevo: ");
 							idCliente = teclado.nextInt();
-							ResultSet resulIdCliente2= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+						resulIdCliente= sentencia.executeQuery("SELECT id, nombre FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 						}
+						System.out.print("ID del cliente: "+resulIdCliente.getInt(1) + " Nombre del cliente: "+ resulIdCliente.getString(2));	
+						System.out.print(" ");
 						
-						ResultSet resulListado= sentencia.executeQuery("SELECT * FROM ventas where ventas.idcliente='"+ String.valueOf(idCliente) + "'");
+						ResultSet resulListado= sentencia.executeQuery("SELECT idventa,idproducto FROM ventas where ventas.idcliente='"+ String.valueOf(idCliente) + "'");
 						
 						while (resulListado.next()) {
-							System.out.println(resulListado.getInt(1) + " "
-									+ resulListado.getString(2) + " "
-									+ resulListado.getInt(3) + " "
-									+ resulListado.getInt(4) + " "
-									+ resulListado.getInt(5));
+							System.out.println("ID de venta: " + resulListado.getInt(1) +" ID del producto: " + resulListado.getInt(2));
 						}
-						//System.out.println("El cliente con ID: "+idCliente + "ha realizado "+resulListado.getInt(1)+" compras");
+					
 						} catch (ClassNotFoundException cn) {
 							cn.printStackTrace();
 						} catch (InstantiationException ie) {
