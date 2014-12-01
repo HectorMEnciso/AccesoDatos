@@ -1,19 +1,15 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
+import java.sql.*;
 public class ejerA {
 	public static void main(String[] args) {
+		
 		try {
-			
 			Class.forName("org.sqlite.JDBC").newInstance();// Cargar el driver, se le pasa este driver JDBC para SQLite
 			Connection conexion = DriverManager.getConnection("jdbc:sqlite:c:/sqlite/empresas.db");//establecemos conexion con la bd
 			Statement sentencia = conexion.createStatement();//creamos la sentencia
 			ResultSet resul = sentencia.executeQuery("SELECT * FROM empleados");//creamos y realizamos la consulta
-			while (resul.next()) {//mientras no sea el siguiente al ultimo
-				System.out.println(resul.getInt(1) + " " + resul.getString(2)	+ " " + resul.getString(3) + " "+ resul.getString(4)+ " "+ resul.getInt(5)+ " "+ resul.getInt(6)+ " "+ resul.getInt(7));
+			while (resul.next()) {//mientras no sea el siguiente al ultimo podemos recorrerla.
+				System.out.println("Número de empleado: "+resul.getInt(1) + " Apellido:" + resul.getString(2)	+ " Profesión: " + resul.getString(3) + " Fecha de alta: "+ 
+			resul.getString(4)+ " Salario: "+ resul.getInt(5)+ " Comisión"+ resul.getInt(6)+ " Número departamento: "+ resul.getInt(7));
 			}
 			resul.close();//cerramos la consulta
 			sentencia.close();//cerramos la sentencia

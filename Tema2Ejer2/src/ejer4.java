@@ -1,9 +1,4 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class ejer4 {
@@ -18,16 +13,20 @@ public class ejer4 {
 			Connection conexion = DriverManager.getConnection("jdbc:sqlite:c:/sqlite/empresas.db");
 																		
 			Statement sentencia = conexion.createStatement();
-		do{
+			
+			do{
+				
 			System.out.print("Introduzca numero de departamento para visualizar sus empleados: ");
 			numeroDepart=teclado.nextInt();
+			ResultSet resulEmple=null;
 			
-			ResultSet resulEmple = sentencia.executeQuery("select deptNo from departamentos where departamentos.deptNo='" + String.valueOf(numeroDepart)+"'");
+			resulEmple = sentencia.executeQuery("select deptNo from departamentos where departamentos.deptNo='" + String.valueOf(numeroDepart)+"'");
+			
 			while (!resulEmple.next() && numeroDepart!=0) {//si no permite avanzar, es que no existe
 				
 				System.out.print("Introduzca numero de departamento de nuevo: "); 
 				numeroDepart=teclado.nextInt();
-				ResultSet resulEmple2 = sentencia.executeQuery("select deptNo from departamentos where departamentos.deptNo='" + String.valueOf(numeroDepart)+"'");
+				resulEmple = sentencia.executeQuery("select deptNo from departamentos where departamentos.deptNo='" + String.valueOf(numeroDepart)+"'");
 			}
 			//construir orden SELECT
 			String sql="SELECT departamentos.nombre,apellido, salario,oficio FROM empleados,departamentos where empleados.deptNo=departamentos.deptNo ";
@@ -46,7 +45,8 @@ public class ejer4 {
 				System.out.println("==========================================");
 				System.out.println("El salario medio del departamento "+numeroDepart+" es: "+ salarioMedio+" y el  número de empleados es: "+numeroEmpleados);
 			}
-			
+			System.out.print("Introduzca numero de departamento para visualizar sus empleados (0 finaliza): ");
+			numeroDepart=teclado.nextInt();
 		}
 		while(numeroDepart!=0);
 		} catch (ClassNotFoundException cn) {

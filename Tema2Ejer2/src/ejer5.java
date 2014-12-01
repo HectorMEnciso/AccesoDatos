@@ -11,7 +11,6 @@ public class ejer5 {
 	public static void main(String[] args) {
 		int opcion, stockActual, stockMinimo, pvp, opcionTablas,idCliente,idProducto,cantidad;
 		String id, descripcion, nombre, direccion, poblacion, telef, nif,fecha;
-		float precioTotal=0; 
 		Scanner teclado = new Scanner(System.in);
 		do {
 			System.out.println("Seleccione BBDD: ");
@@ -44,7 +43,6 @@ public class ejer5 {
 							System.out.print("Introduzca id: ");
 							id = teclado.nextLine();
 						
-							
 							while (id.equals("")) {//Mientras DNI se nulo, volvemos a pedirlo
 								System.out.print("El campo no puede ser nulo, Introduzca id: ");
 								id = teclado.nextLine();
@@ -88,7 +86,6 @@ public class ejer5 {
 										+ resul.getString(2) + " "
 										+ resul.getInt(3) + resul.getInt(5));
 							}
-							//al final de so while volver a pedir.
 							System.out.print("Introduzca otro id para continuar o 0 para abortar: ");
 							id = teclado.nextLine();
 							}while(!id.equals("0"));
@@ -182,10 +179,10 @@ public class ejer5 {
 			}
 					else if(opcionTablas==3){
 						try{
-							Class.forName("org.sqlite.JDBC").newInstance();
+							
 							Connection conexion = DriverManager.getConnection("jdbc:sqlite:c:/sqlite/tienda.db");
 							Statement sentencia = conexion.createStatement();
-							
+							Class.forName("org.sqlite.JDBC").newInstance();
 							
 							System.out.println("Introducion datos tabla VENTAS SQLITE");
 							System.out.println("==================================");
@@ -196,13 +193,12 @@ public class ejer5 {
 								System.out.print("El campo no puede ser nulo, Introduzca id VENTA: ");
 								id = teclado.nextLine();
 							}
-							ResultSet resulVentas =null; 
-							resulVentas=	sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
+							ResultSet resulVentas = sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
 							while (resulVentas.next()) {
 
 								System.out.print("El id VENTA ya existe ya existe: ");
 								id = teclado.nextLine();
-								resulVentas= sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
+								ResultSet resulVentas2 = sentencia.executeQuery("SELECT IDVENTA FROM ventas where ventas.IDVENTA='"+ String.valueOf(Integer.parseInt(id)) + "'");
 							}
 							System.out.println("Introduzca fecha: ");
 							fecha=teclado.nextLine();
@@ -213,27 +209,25 @@ public class ejer5 {
 							}
 							System.out.println("Introduzca ID de Cliente");
 							idCliente=teclado.nextInt();
-							ResultSet resulIdCliente=null; 
-							resulIdCliente=sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+							ResultSet resulIdCliente= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 							
 							while (!resulIdCliente.next()) {
 
 								System.out.print("El IdCliente no existe,introduzcalo de nuevo: ");
 								idCliente = teclado.nextInt();
-								resulIdCliente= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+								ResultSet resulIdCliente2= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 							}
 							
 							
 							System.out.println("Introduzca ID de Producto");
 							idProducto=teclado.nextInt();
-							ResultSet resulIdProducto=null; 
-							resulIdProducto=sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
+							ResultSet resulIdProducto= sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
 							
 							while (!resulIdProducto.next()) {
 
 								System.out.print("El IdProducto no existe,introduzcalo de nuevo: ");
 								idProducto = teclado.nextInt();
-								resulIdProducto= sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
+								ResultSet resulIdProducto2= sentencia.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
 							}
 							System.out.println("Introduzca cantidad: ");
 							cantidad=teclado.nextInt();
@@ -241,36 +235,35 @@ public class ejer5 {
 								System.out.println("La cantidad debe ser mayor que 0: ");
 								cantidad=teclado.nextInt();
 							}
-							ResultSet resulStock= sentencia.executeQuery("SELECT stockactual FROM productos where productos.id='"+ String.valueOf(idProducto) + "' and stockactual>0");
+							ResultSet resulStock= sentencia.executeQuery("SELECT stockactual FROM productos where productos.id='"+ String.valueOf(idProducto) + "'");
 							
-							while (resulStock.next()){
-								Statement sentenciaVentas = conexion.createStatement();
-								int resul1Ventas= sentenciaVentas.executeUpdate("insert into ventas values( "
-												+ "'"
-												+ Integer.parseInt(id)
-												+ "','"
-												+ fecha
-												+ "','"
-												+ idCliente
-												+ "','"
-												+ idProducto
-												+ "','"
-												+ cantidad
-												+ "')");
-								int stockfinal=(resulStock.getInt(1)-cantidad);
-								int actualizarStock = sentencia.executeUpdate("update productos set stockactual ='"+ String.valueOf(stockfinal) + "' where id='"+ String.valueOf(idProducto)+"'");
-								ResultSet resulTablaVentas = sentencia.executeQuery("SELECT * FROM ventas");
-								while (resulTablaVentas.next()) {
-									System.out.println(resulTablaVentas.getInt(1) + " "
-											+ resulTablaVentas.getString(2) + " "
-											+ resulTablaVentas.getInt(3) + " "
-											+ resulTablaVentas.getInt(4) + " "
-											+ resulTablaVentas.getInt(5));
-								}
+							
+							
+							Statement sentenciaVentas = conexion.createStatement();
+							int resul1Ventas= sentenciaVentas.executeUpdate("insert into ventas values( "
+											+ "'"
+											+ Integer.parseInt(id)
+											+ "','"
+											+ fecha
+											+ "','"
+											+ idCliente
+											+ "','"
+											+ idProducto
+											+ "','"
+											+ cantidad
+											+ "')");
+							ResultSet resulTablaVentas = sentencia.executeQuery("SELECT * FROM ventas");
+							while (resulTablaVentas.next()) {
+								System.out.println(resulTablaVentas.getInt(1) + " "
+										+ resulTablaVentas.getString(2) + " "
+										+ resulTablaVentas.getInt(3) + " "
+										+ resulTablaVentas.getInt(4) + " "
+										+ resulTablaVentas.getInt(5));
 							}
+							
 						} catch (ClassNotFoundException cn) {
 							cn.printStackTrace();
-						} catch (InstantiationException ie) { 
+						} catch (InstantiationException ie) {
 							ie.printStackTrace();
 						} catch (IllegalAccessException ia) {
 							ia.printStackTrace();
@@ -287,26 +280,27 @@ public class ejer5 {
 						System.out.println("LISTADO CLIENTES TABLA VENTAS");
 						System.out.println("==============================");
 						
-						System.out.print("Introduzca ID de cliente para listar sus ventas: ");
+						System.out.println("Introduzca ID de cliente para listar sus ventas: ");
 						idCliente=teclado.nextInt();
-						ResultSet resulIdCliente= null;
-						
-						resulIdCliente=	sentencia.executeQuery("SELECT id, nombre FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+						ResultSet resulIdCliente= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 						
 						while (!resulIdCliente.next()) {
+
 							System.out.print("El IdCliente no existe,introduzcalo de nuevo: ");
 							idCliente = teclado.nextInt();
-						resulIdCliente= sentencia.executeQuery("SELECT id, nombre FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
+							ResultSet resulIdCliente2= sentencia.executeQuery("SELECT id FROM clientes where clientes.id='"+ String.valueOf(idCliente) + "'");
 						}
-						System.out.print("ID del cliente: "+resulIdCliente.getInt(1) + " Nombre del cliente: "+ resulIdCliente.getString(2));	
-						System.out.print(" ");
 						
-						ResultSet resulListado= sentencia.executeQuery("SELECT idventa,idproducto FROM ventas where ventas.idcliente='"+ String.valueOf(idCliente) + "'");
+						ResultSet resulListado= sentencia.executeQuery("SELECT * FROM ventas where ventas.idcliente='"+ String.valueOf(idCliente) + "'");
 						
 						while (resulListado.next()) {
-							System.out.println("ID de venta: " + resulListado.getInt(1) +" ID del producto: " + resulListado.getInt(2));
+							System.out.println(resulListado.getInt(1) + " "
+									+ resulListado.getString(2) + " "
+									+ resulListado.getInt(3) + " "
+									+ resulListado.getInt(4) + " "
+									+ resulListado.getInt(5));
 						}
-					
+						//System.out.println("El cliente con ID: "+idCliente + "ha realizado "+resulListado.getInt(1)+" compras");
 						} catch (ClassNotFoundException cn) {
 							cn.printStackTrace();
 						} catch (InstantiationException ie) {
@@ -334,11 +328,10 @@ public class ejer5 {
 					if (opcionTablas == 1) {
 
 						try {
-							Class.forName("com.mysql.jdbc.Driver").newInstance();
+							
 							Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/tienda", "root","root");
 							Statement sentenciaMysql = conexion.createStatement();
-							ResultSet resulProducto=null;
-						
+							Class.forName("com.mysql.jdbc.Driver").newInstance();
 							//Class.forName("org.sqlite.JDBC").newInstance();
 
 							System.out.println("Introducion datos tabla PRODUCTOS MYSQL");
@@ -349,13 +342,12 @@ public class ejer5 {
 								System.out.print("El campo no puede ser nulo, Introduzca id: ");
 								id = teclado.nextLine();
 							}
-							resulProducto = sentenciaMysql.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(Integer.parseInt(id)) + "'");
+							ResultSet resulProducto = sentenciaMysql.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(Integer.parseInt(id)) + "'");
 							while (resulProducto.next()) {
 
 								System.out.print("El id del producto ya existe: ");
 								id = teclado.nextLine();
-								resulProducto = sentenciaMysql.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(Integer.parseInt(id)) + "'");
-								//ResultSet resulProducto2 = sentenciaMysql.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(Integer.parseInt(id)) + "'");
+								ResultSet resulProducto2 = sentenciaMysql.executeQuery("SELECT id FROM productos where productos.id='"+ String.valueOf(Integer.parseInt(id)) + "'");
 							}
 							
 							System.out.print("Introduzca descripcion: ");

@@ -12,41 +12,23 @@ public class ejerC {
 		int numeroEmpleado, salario, comision, deptNo;
 		try {
 
-			Class.forName("org.sqlite.JDBC").newInstance();// Cargar el driver,
-															// se le pasa este
-															// driver JDBC para
-															// SQLite
-			Connection conexion = DriverManager
-					.getConnection("jdbc:sqlite:c:/sqlite/empresas.db");// establecemos
-																		// conexion
-																		// con
-																		// la bd
-			Statement sentencia = conexion.createStatement();// creamos la
-																// sentencia
-			ResultSet resul = sentencia
-					.executeQuery("SELECT emp_no FROM empleados");// creamos y
-																	// realizamos
-																	// la
-																	// consulta
-			// creamos
-																		// y
-																		// realizamos
-																		// la
-																		// consulta
+			Class.forName("org.sqlite.JDBC").newInstance();// Cargar el driver, se le pasa este driver JDBC para SQLite
+			Connection conexion = DriverManager.getConnection("jdbc:sqlite:c:/sqlite/empresas.db");// establecemos conexion con la bd
+			Statement sentencia = conexion.createStatement();// creamos la sentencia
+			ResultSet resul = sentencia.executeQuery("SELECT emp_no FROM empleados");// creamos y realizamos la consulta y realizamos la consulta
+			ResultSet resulEmpleados=null;
 			
-			
-			System.out.print("introduzca emp_no: ");
+			System.out.print("Introduzca emp_no: ");
 			numeroEmpleado = teclado.nextInt();
-			ResultSet resulEmpleados = sentencia.executeQuery("select apellido from empleados where empleados.emp_no='" + String.valueOf(numeroEmpleado)+"'");
 			
-			while (resulEmpleados.next()) {
-				
-					System.out.print("introduzca emp_no de nuevo: ");
+			resulEmpleados = sentencia.executeQuery("select apellido from empleados where empleados.emp_no='" + String.valueOf(numeroEmpleado)+"'");
+			
+			while (resulEmpleados.next()) {//Mientras haya datos iguales al numero de empleado introducido es que ya existe uy no debe existir.
+					System.out.print("Introduzca emp_no de nuevo: ");
 					numeroEmpleado = teclado.nextInt();
-					ResultSet resulEmpleados2 = sentencia
-							.executeQuery("select apellido from empleados where empleados.emp_no='" + String.valueOf(numeroEmpleado)+"'");
+					resulEmpleados = sentencia.executeQuery("select apellido from empleados where empleados.emp_no='" + String.valueOf(numeroEmpleado)+"'");
 			}
-			teclado.nextLine();
+			teclado.nextLine();//capturamos el \n para poder string despues de haber leido números.
 			System.out.print("introduzca apellido: ");
 			apellido = teclado.nextLine();
 			System.out.print("introduzca oficio:");
@@ -59,24 +41,20 @@ public class ejerC {
 			comision = teclado.nextInt();
 			System.out.print("introduzca depNo:");
 			deptNo = teclado.nextInt();
-			ResultSet resulDepartamentos = sentencia
-					.executeQuery("SELECT deptNo FROM departamentos where departamentos.deptNo='"+String.valueOf(deptNo)+"'");
-			while (!resulDepartamentos.next()) {
-				
+			
+			ResultSet resulDepartamentos=null;
+			resulDepartamentos = sentencia.executeQuery("SELECT deptNo FROM departamentos where departamentos.deptNo='"+String.valueOf(deptNo)+"'");
+			
+			while (!resulDepartamentos.next()) {//si no existe nos lo pide, ya que debe de existir.
 					System.out.print("introduzca deptNo de nuevo: ");
 					deptNo = teclado.nextInt();
-					ResultSet resulDepartamentos2 = sentencia
-							.executeQuery("SELECT deptNo FROM departamentos where departamentos.deptNo='"+String.valueOf(deptNo)+"'");
+					 resulDepartamentos = sentencia.executeQuery("SELECT deptNo FROM departamentos where departamentos.deptNo='"+String.valueOf(deptNo)+"'");
 			}
-			Statement sentencia1 = conexion.createStatement();// creamos la
-																// sentencia
-			int resul1 = sentencia1
-					.executeUpdate("insert into empleados values( " + "'"
-							+ numeroEmpleado + "','" + apellido + "','" + oficio
+			Statement sentencia1 = conexion.createStatement();// creamos la sentencia
+			int resul1 = sentencia1.executeUpdate("insert into empleados values( " + "'"+ numeroEmpleado + "','" + apellido + "','" + oficio
 							+ "','" + fecha_alt + "','" + salario + "','"
-							+ comision + "','" + deptNo + "')");// creamos y
-																// realizamos la
-																// consulta
+							+ comision + "','" + deptNo + "')");// creamos y realizamos la consulta
+			
 			while (resul.next()) {// mientras no sea el siguiente al ultimo
 				System.out.println(resul.getInt(1) + " " + resul.getString(2)
 						+ " " + resul.getString(3) + " " + resul.getString(4)
