@@ -33,26 +33,9 @@ public class Pantalla2 extends JFrame {
 	private JTextField Ttelefono;
 	private JTextField Tnif;
 	private JLabel lblInfo;
+	private JButton btnSiguiente,btnAnterior;
+	private int posicion;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Pantalla2 frame = new Pantalla2();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public Pantalla2() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 438, 271);
@@ -66,14 +49,12 @@ public class Pantalla2 extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				SessionFactory SF=SessionFactoryUtil.createSessionFactory();
 				Session sesion=SF.openSession();//abrir la conexion
+				Query resul=sesion.createQuery("from Clientes where id=(select min(id) from Clientes)");
+				Iterator iter=resul.iterate();
 				Clientes clientes=new Clientes();
-				Query resul=sesion.createQuery("select id from Clientes where id=(select min(id) from Clientes)");
-				List <Clientes> lista=resul.list();
-				Iterator <Clientes> iter = lista.iterator();
-				
 				while (iter.hasNext()){
 					//recorrer la lista y extraer la información
-					clientes =iter.next();
+					clientes = (Clientes) iter.next();
 					TidCliente.setText(Integer.toString(clientes.getId()));
 					Tnombre.setText(clientes.getNombre());
 					Tdireccion.setText(clientes.getDireccion());
@@ -112,14 +93,85 @@ public class Pantalla2 extends JFrame {
 		contentPane.add(btnPrimerRegistro);
 		
 		JButton btnltimoRegistro = new JButton("\u00DAltimo Registro");
+		btnltimoRegistro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SessionFactory SF=SessionFactoryUtil.createSessionFactory();
+				Session sesion=SF.openSession();//abrir la conexion
+				Query resul=sesion.createQuery("from Clientes where id=(select max(id) from Clientes)");
+				Iterator iter=resul.iterate();
+				Clientes clientes=new Clientes();
+				while (iter.hasNext()){
+					//recorrer la lista y extraer la información
+					clientes = (Clientes) iter.next();
+					TidCliente.setText(Integer.toString(clientes.getId()));
+					Tnombre.setText(clientes.getNombre());
+					Tdireccion.setText(clientes.getDireccion());
+					Tpoblacion.setText(clientes.getPoblacion());
+					Ttelefono.setText(clientes.getTelef());
+					Tnif.setText(clientes.getNif());
+				}
+				sesion.close();
+			}
+		});
 		btnltimoRegistro.setBounds(207, 75, 146, 23);
 		contentPane.add(btnltimoRegistro);
 		
-		JButton btnSiguiente = new JButton("Siguiente");
+		 btnSiguiente = new JButton("Siguiente");
+		btnSiguiente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SessionFactory SF=SessionFactoryUtil.createSessionFactory();
+				Session sesion=SF.openSession();//abrir la conexion
+				Clientes clientes=new Clientes();
+				clientes = new Clientes();
+				posicion=Integer.parseInt(TidCliente.getText());
+				clientes=(Clientes)sesion.get(Clientes.class,posicion);
+				if(clientes==null){
+					lblInfo.setText("No hay más clientes.");
+					btnSiguiente.setEnabled(false);
+				}else {
+					TidCliente.setText(Integer.toString(clientes.getId()));
+					Tnombre.setText(clientes.getNombre());
+					Tdireccion.setText(clientes.getDireccion());
+					Tpoblacion.setText(clientes.getPoblacion());
+					Ttelefono.setText(clientes.getTelef());
+					Tnif.setText(clientes.getNif());
+				}
+				TidCliente.setText(Integer.toString(posicion+1));
+				sesion.close();
+			}
+		});
 		btnSiguiente.setBounds(207, 109, 146, 23);
 		contentPane.add(btnSiguiente);
 		
-		JButton btnAnterior = new JButton("Anterior");
+		 btnAnterior = new JButton("Anterior");
+		btnAnterior.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SessionFactory SF=SessionFactoryUtil.createSessionFactory();
+				Session sesion=SF.openSession();//abrir la conexion
+				Clientes clientes=new Clientes();
+				clientes = new Clientes();
+				posicion=Integer.parseInt(TidCliente.getText());
+				Query resul=sesion.createQuery("from Clientes where id< "+posicion);
+				Iterator iter=resul.iterate();
+				//String sql="from Clientes where id< "+posicion;
+				/*clientes=(Clientes)sesion.get(Clientes.class,posicion);
+				if(clientes==null){
+					lblInfo.setText("No hay más clientes.");
+					btnAnterior.setEnabled(false);
+				}else {*/
+				while (iter.hasNext()){
+					TidCliente.setText(Integer.toString(clientes.getId()));
+					Tnombre.setText(clientes.getNombre());
+					Tdireccion.setText(clientes.getDireccion());
+					Tpoblacion.setText(clientes.getPoblacion());
+					Ttelefono.setText(clientes.getTelef());
+					Tnif.setText(clientes.getNif());
+				//}
+				}
+				TidCliente.setText(Integer.toString(posicion-1));
+				sesion.close();
+			}
+		});
 		btnAnterior.setBounds(207, 143, 146, 23);
 		contentPane.add(btnAnterior);
 		
